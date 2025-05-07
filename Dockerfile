@@ -9,6 +9,9 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:8-jre-alpine
 
+RUN apk add --no-progress --update libcap
+RUN setcap "cap_net_bind_service=+ep" $(readlink -f $(which java))
+
 WORKDIR /usr/src/app
 
 ENV	SERVICE_USER=myuser \
