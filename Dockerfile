@@ -23,6 +23,8 @@ COPY --from=builder /app/target/*.jar app.jar
 
 RUN chown -R ${SERVICE_USER}:${SERVICE_GROUP} ./app.jar
 
+ENV JAVA_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom"
+
 USER ${SERVICE_USER}
 EXPOSE 80
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/urandom","-jar","./app.jar", "--port=80"]
