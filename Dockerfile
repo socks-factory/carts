@@ -9,9 +9,6 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:8-jre-alpine
 
-RUN apk add --no-progress --update libcap
-RUN setcap "cap_net_bind_service=+ep" $(readlink -f $(which java))
-
 WORKDIR /usr/src/app
 
 ENV	SERVICE_USER=myuser \
@@ -25,8 +22,6 @@ RUN	addgroup -g ${SERVICE_GID} ${SERVICE_GROUP} && \
 COPY --from=builder /app/target/*.jar app.jar
 
 RUN chown -R ${SERVICE_USER}:${SERVICE_GROUP} ./app.jar
-
-ENV JAVA_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom"
 
 USER ${SERVICE_USER}
 EXPOSE 80
