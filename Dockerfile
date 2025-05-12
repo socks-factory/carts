@@ -20,7 +20,8 @@ RUN	addgroup -g ${SERVICE_GID} ${SERVICE_GROUP} && \
 	adduser -g "${SERVICE_NAME} user" -D -H -G ${SERVICE_GROUP} -s /sbin/nologin -u ${SERVICE_UID} ${SERVICE_USER} && \
         apk add --update libcap
 
-COPY ld.path /etc/ld-musl-x86_64.path
+COPY ld-x86_64.path /etc/ld-musl-x86_64.path
+COPY ld-AArch64.path /etc/ld-musl-AArch64.path
 
 COPY --from=builder /app/target/*.jar app.jar
 
