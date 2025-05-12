@@ -21,7 +21,7 @@ RUN	addgroup -g ${SERVICE_GID} ${SERVICE_GROUP} && \
         apk add --update libcap
 
 COPY ld-x86_64.path /etc/ld-musl-x86_64.path
-COPY ld-AArch64.path /etc/ld-musl-AArch64.path
+COPY ld-aarch64.path /etc/ld-musl-aarch64.path
 
 COPY --from=builder /app/target/*.jar app.jar
 
