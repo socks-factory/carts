@@ -17,11 +17,15 @@ ENV	SERVICE_USER=myuser \
 	SERVICE_GID=10001
 
 RUN	addgroup -g ${SERVICE_GID} ${SERVICE_GROUP} && \
-	adduser -g "${SERVICE_NAME} user" -D -H -G ${SERVICE_GROUP} -s /sbin/nologin -u ${SERVICE_UID} ${SERVICE_USER}
+	adduser -g "${SERVICE_NAME} user" -D -H -G ${SERVICE_GROUP} -s /sbin/nologin -u ${SERVICE_UID} ${SERVICE_USER} && \
+        apk add --update libcap
+
+COPY ld.path /etc/ld-musl-x86_64.path
 
 COPY --from=builder /app/target/*.jar app.jar
 
 RUN chown -R ${SERVICE_USER}:${SERVICE_GROUP} ./app.jar
+RUN setcap 'cap_net_bind_service=+ep' $(readlink -f $(which java))
 
 USER ${SERVICE_USER}
 EXPOSE 80
